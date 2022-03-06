@@ -5,8 +5,9 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom";
 import axios from "axios";
-import { message } from "antd";
+import { ConfigProvider, message } from "antd";
 import history from "./history";
+import zhCN from "antd/lib/locale/zh_CN";
 
 // axios.defaults.baseURL = "http://192.168.3.244:3000";
 axios.defaults.baseURL = "/api";
@@ -27,7 +28,14 @@ axios.interceptors.response.use(
       localStorage.clear();
       history.replace("/login");
     } else {
-      message.error(error.response.data.message[0]);
+      const errMsg = error.response.data.message;
+      if (errMsg instanceof Array) {
+        errMsg.forEach((item) => {
+          message.error(item);
+        });
+      } else {
+        message.error(errMsg);
+      }
     }
 
     return Promise.reject(error);
@@ -35,9 +43,11 @@ axios.interceptors.response.use(
 );
 
 ReactDOM.render(
-  <HistoryRouter history={history}>
-    <App />
-  </HistoryRouter>,
+  <ConfigProvider locale={zhCN}>
+    <HistoryRouter history={history}>
+      <App />
+    </HistoryRouter>
+  </ConfigProvider>,
   document.getElementById("root")
 );
 

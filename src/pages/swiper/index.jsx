@@ -1,6 +1,16 @@
-import { Image, Switch, Table } from "antd";
+import {
+  Button,
+  Form,
+  Image,
+  message,
+  Popconfirm,
+  Space,
+  Switch,
+  Table,
+} from "antd";
 import axios from "axios";
 import { useCallback } from "react";
+import FormModal from "../../components/editModal";
 import usePagingList from "../../hooks/usePagingList";
 
 const Swiper = () => {
@@ -11,7 +21,7 @@ const Swiper = () => {
 
     return res.data;
   }, []);
-  const { page, size, total, list, setList } = usePagingList(request);
+  const { page, size, total, list, setList, getList } = usePagingList(request);
 
   const columns = [
     {
@@ -28,15 +38,33 @@ const Swiper = () => {
     {
       title: "是否上架",
       dataIndex: "active",
-      render: (v, _, i) => {
+      renderFormItem: () => {
+        return (
+          <Form.Item
+            label="是否上架"
+            name="active"
+            valuePropName="checked"
+            required
+            initialValue={true}
+          >
+            <Switch></Switch>
+          </Form.Item>
+        );
+      },
+      render: (v, row, i) => {
         return (
           <Switch
             checked={v}
-            onChange={(value) => {
+            onChange={async (value) => {
               setList((data) => {
                 data[i].active = value;
                 return [...data];
               });
+              await axios.put("/swiper", {
+                ...row,
+                active: value,
+              });
+              message.success("操作成功");
             }}
           ></Switch>
         );
@@ -44,14 +72,70 @@ const Swiper = () => {
     },
     {
       title: "操作",
-      render: () => {
-        return <span className="actionItem">编辑</span>;
+      render: (_, row) => {
+        return (
+          <Space size={15}>
+            <span
+              className="actionItem"
+              onClick={async () => {
+                const values = await FormModal.show({
+                  columns,
+                  initialValues: row,
+                });
+                const res = await axios.put("/swiper", {
+                  ...values,
+                  id: row.id,
+                });
+
+                if (res) {
+                  getList();
+                  message.success("操作成功");
+                }
+              }}
+            >
+              编辑
+            </span>
+            <Popconfirm
+              className="actionItem dangerText"
+              title="是否确认删除？"
+              onConfirm={async () => {
+                const res = await axios.delete("/swiper", {
+                  params: {
+                    id: row.id,
+                  },
+                });
+                if (res) {
+                  getList();
+                  message.success("操作成功");
+                }
+              }}
+            >
+              删除
+            </Popconfirm>
+          </Space>
+        );
       },
     },
   ];
 
   return (
     <div className="Swiper">
+      <Space style={{ marginBottom: 16 }}>
+        <Button
+          type="primary"
+          onClick={async () => {
+            const values = await FormModal.show({ columns });
+            const res = await axios.post("/swiper", values);
+
+            if (res) {
+              getList();
+              message.success("操作成功");
+            }
+          }}
+        >
+          新增
+        </Button>
+      </Space>
       <Table
         rowKey="id"
         columns={columns}

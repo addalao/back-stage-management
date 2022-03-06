@@ -25,3 +25,7 @@
   cursor: pointer;
   color: #1890ff;
 }
+
+.dangerText {
+  color: #ff4d4f;
+}
