@@ -1,0 +1,61 @@
+.layout {
+  min-height: 100vh;
+}
+
+.sider {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  padding: 20px 0;
+}
+
+.rightLayout {
+  padding-left: 200px;
+  padding-top: 64px;
+}
+
+.header {
+  position: fixed;
+  left: 200px;
+  right: 0;
+  top: 0;
+  background-color: #fff;
+  padding: 0 10px;
+}
+
+.content {
+  padding: 24px;
+  margin: 24px 16px;
+  background-color: #fff;
+}
+
+.footer {
+  text-align: center;
+}
+
+.menu {
+  margin-top: 20px;
+}
+
+.HeaderActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.HeaderActions .action {
+  padding: 0 12px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.HeaderActions .action:hover {
+  background-color: #f5f5f5;
+}
+
+.HeaderActions .avatar {
+  margin-right: 8px;
+}
+
+.logoutMenu {
+  min-width: 160px;
+}

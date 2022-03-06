@@ -1,23 +1,34 @@
-import logo from './logo.svg';
-import './App.css';
+import { Spin } from "antd";
+import React from "react";
+import { Navigate, Route, Routes } from "react-router-dom";
+import "./App.css";
+
+const Login = React.lazy(() => import("./login"));
+const BasicLayout = React.lazy(() => import("./layout"));
+
+const AuthVerification = ({ children }) => {
+  const token = localStorage.getItem("token");
+  if (token) return children;
+
+  return <Navigate to="/login" replace></Navigate>;
+};
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <React.Suspense fallback={<Spin className="loading" tip="Loading..." />}>
+        <Routes>
+          <Route path="/login" element={<Login></Login>}></Route>
+          <Route
+            path="/*"
+            element={
+              <AuthVerification>
+                <BasicLayout></BasicLayout>
+              </AuthVerification>
+            }
+          ></Route>
+        </Routes>
+      </React.Suspense>
     </div>
   );
 }
