@@ -11,6 +11,7 @@ import {
 import axios from "axios";
 import { useCallback } from "react";
 import FormModal from "../../components/formModal";
+import GenaralUpload from "../../components/genalUpload";
 
 import usePagingList from "../../hooks/usePagingList";
 
@@ -28,6 +29,22 @@ const Swiper = () => {
     {
       title: "图片",
       dataIndex: "url",
+      renderFormItem: () => {
+        return (
+          <Form.Item
+            label="图片"
+            name="url"
+            rules={[
+              {
+                required: true,
+                message: "请上传图片",
+              },
+            ]}
+          >
+            <GenaralUpload maxCount={1}></GenaralUpload>
+          </Form.Item>
+        );
+      },
       render: (v) => {
         return <Image src={v} width={100} height={50}></Image>;
       },

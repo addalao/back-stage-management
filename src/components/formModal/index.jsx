@@ -11,7 +11,7 @@ const FormModal = ({
   const [form] = Form.useForm();
   return (
     <Modal
-      width={800}
+      width={1000}
       visible={columns.length > 0}
       onCancel={onCancel}
       okText="确认"
@@ -30,7 +30,7 @@ const FormModal = ({
             .filter((v) => hideColKeys.indexOf(v.dataIndex) < 0 && v.dataIndex)
             .map((item) => {
               return (
-                <Col span={12} key={item.dataIndex}>
+                <Col span={item.span || 12} key={item.dataIndex}>
                   {item.renderFormItem && item.renderFormItem()}
                   {!item.renderFormItem && (
                     <Form.Item

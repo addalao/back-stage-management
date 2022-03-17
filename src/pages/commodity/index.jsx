@@ -13,7 +13,9 @@ import axios from "axios";
 import { useEffect } from "react";
 import { useState } from "react";
 import { useCallback } from "react";
+import WEditor from "../../components/editor";
 import FormModal from "../../components/formModal";
+import GenaralUpload from "../../components/genalUpload";
 
 import usePagingList from "../../hooks/usePagingList";
 
@@ -55,11 +57,31 @@ function Commodity() {
       },
     },
     {
+      title: "商品轮播图",
+      dataIndex: "imgs",
+      renderFormItem: () => {
+        return (
+          <Form.Item
+            label="图片"
+            name="imgs"
+            rules={[
+              {
+                required: true,
+                message: "请上传图片",
+              },
+            ]}
+          >
+            <GenaralUpload></GenaralUpload>
+          </Form.Item>
+        );
+      },
+    },
+    {
       title: "所属分类",
       dataIndex: "cates",
       renderFormItem: () => {
         return (
-          <Form.Item label="是否上架" name="cates" required>
+          <Form.Item label="所属分类" name="cates" required>
             <Select
               mode="multiple"
               options={cates.map((v) => {
@@ -68,27 +90,12 @@ function Commodity() {
                   value: v.id,
                 };
               })}
-              // style={{ width: "100%" }}
-              // placeholder="select one country"
-              // defaultValue={v.map((itm) => {
-              //   return itm.name;
-              // })}
-              // optionLabelProp="label"
-            >
-              {/* {v.map((itm) => {
-                return (
-                  <Option value={itm.name} label={itm.name}>
-                    <div className="demo-option-label-item">{itm.name}</div>
-                  </Option>
-                );
-              })} */}
-            </Select>
+            ></Select>
           </Form.Item>
         );
       },
       render: (v) => v.map((i) => i.name).join("，"),
     },
-
     {
       title: "是否上架",
       dataIndex: "active",
@@ -120,6 +127,18 @@ function Commodity() {
               message.success("操作成功");
             }}
           ></Switch>
+        );
+      },
+    },
+    {
+      title: "详情",
+      dataIndex: "details",
+      span: 24,
+      renderFormItem: () => {
+        return (
+          <Form.Item name="details" noStyle>
+            <WEditor></WEditor>
+          </Form.Item>
         );
       },
     },
@@ -197,7 +216,9 @@ function Commodity() {
       </Space>
       <Table
         rowKey="id"
-        columns={columns}
+        columns={columns.filter(
+          (v) => !(v.dataIndex === "imgs" || v.dataIndex === "details")
+        )}
         dataSource={list}
         pagination={{ pageSize: size, total, current: page }}
         scroll={{ x: 1000, y: 300 }}
