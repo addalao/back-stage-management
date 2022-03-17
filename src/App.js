@@ -7,13 +7,19 @@ const Login = React.lazy(() => import("./login"));
 const BasicLayout = React.lazy(() => import("./layout"));
 
 const AuthVerification = ({ children }) => {
+
   const token = localStorage.getItem("token");
   if (token) return children;
 
   return <Navigate to="/login" replace></Navigate>;
 };
 
+
+
+
+
 function App() {
+
   return (
     <div className="App">
       <React.Suspense fallback={<Spin className="loading" tip="Loading..." />}>
@@ -23,7 +29,7 @@ function App() {
             path="/*"
             element={
               <AuthVerification>
-                <BasicLayout></BasicLayout>
+                <BasicLayout ></BasicLayout>
               </AuthVerification>
             }
           ></Route>

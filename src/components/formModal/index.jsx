@@ -1,7 +1,13 @@
 import { Form, Input, Modal, Row, Col } from "antd";
 import ReactDOM from "react-dom";
 
-const FormModal = ({ columns = [], onCancel, onFinish, initialValues }) => {
+const FormModal = ({
+  columns = [],
+  hideColKeys = [],
+  onCancel,
+  onFinish,
+  initialValues,
+}) => {
   const [form] = Form.useForm();
   return (
     <Modal
@@ -21,7 +27,7 @@ const FormModal = ({ columns = [], onCancel, onFinish, initialValues }) => {
       >
         <Row gutter={10}>
           {columns
-            .filter((v) => v.dataIndex)
+            .filter((v) => hideColKeys.indexOf(v.dataIndex) < 0 && v.dataIndex)
             .map((item) => {
               return (
                 <Col span={12} key={item.dataIndex}>
@@ -46,10 +52,10 @@ const FormModal = ({ columns = [], onCancel, onFinish, initialValues }) => {
   );
 };
 
-FormModal.show = ({ columns, initialValues }) => {
+FormModal.show = ({ columns, initialValues, hideColKeys }) => {
   return new Promise((resolve, reject) => {
-    const container = document.createElement("div");
-    document.body.appendChild(container);
+    const container = document.createElement("div"); //创建一个div
+    document.body.appendChild(container); //添加到body
 
     const close = () => {
       ReactDOM.unmountComponentAtNode(container);
@@ -60,6 +66,7 @@ FormModal.show = ({ columns, initialValues }) => {
       <FormModal
         columns={columns}
         initialValues={initialValues}
+        hideColKeys={hideColKeys}
         onFinish={(values) => {
           close();
           resolve(values);

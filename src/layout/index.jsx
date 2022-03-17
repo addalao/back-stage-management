@@ -11,6 +11,8 @@ const { Header, Footer, Sider, Content } = Layout;
 const Home = React.lazy(() => import("../pages/home"));
 const User = React.lazy(() => import("../pages/user"));
 const Swiper = React.lazy(() => import("../pages/swiper"));
+const Category = React.lazy(() => import("../pages/category"));
+const Commodity = React.lazy(() => import("../pages/commodity"));
 
 const BasicLayout = () => {
   return (
@@ -28,6 +30,11 @@ const BasicLayout = () => {
             fallback={<Spin className="loading" tip="Loading..." />}
           >
             <Routes>
+              <Route
+                path="/commodity"
+                element={<Commodity></Commodity>}
+              ></Route>
+              <Route path="/category" element={<Category></Category>}></Route>
               <Route path="/user" element={<User></User>}></Route>
               <Route path="/swiper" element={<Swiper></Swiper>}></Route>
               <Route path="/" element={<Home></Home>}></Route>

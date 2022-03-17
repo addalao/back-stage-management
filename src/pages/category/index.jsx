@@ -14,9 +14,9 @@ import FormModal from "../../components/formModal";
 
 import usePagingList from "../../hooks/usePagingList";
 
-const Swiper = () => {
+function Category() {
   const request = useCallback(async ({ page, size }) => {
-    const res = await axios.get("/swiper", {
+    const res = await axios.get("/category", {
       params: { page, size },
     });
 
@@ -26,16 +26,20 @@ const Swiper = () => {
 
   const columns = [
     {
-      title: "图片",
-      dataIndex: "url",
+      title: "分类名称",
+      dataIndex: "name",
       render: (v) => {
-        return <Image src={v} width={100} height={50}></Image>;
+        return <Space>{v}</Space>;
       },
     },
     {
-      title: "跳转地址",
-      dataIndex: "jumpUrl",
+      title: "分类图片",
+      dataIndex: "icon",
+      render: (v) => {
+        return <Image src={v} width={50} height={50}></Image>;
+      },
     },
+
     {
       title: "是否上架",
       dataIndex: "active",
@@ -60,7 +64,7 @@ const Swiper = () => {
                 data[i].active = value;
                 return [...data];
               });
-              await axios.put("/swiper", {
+              await axios.put("/category", {
                 ...row,
                 active: value,
               });
@@ -82,7 +86,7 @@ const Swiper = () => {
                   columns,
                   initialValues: row,
                 });
-                const res = await axios.put("/swiper", {
+                const res = await axios.put("/category", {
                   ...values,
                   id: row.id,
                 });
@@ -99,7 +103,7 @@ const Swiper = () => {
               className="actionItem dangerText"
               title="是否确认删除？"
               onConfirm={async () => {
-                const res = await axios.delete("/swiper", {
+                const res = await axios.delete("/category", {
                   params: {
                     id: row.id,
                   },
@@ -117,7 +121,6 @@ const Swiper = () => {
       },
     },
   ];
-
   return (
     <div className="Swiper">
       <Space style={{ marginBottom: 16 }}>
@@ -128,7 +131,7 @@ const Swiper = () => {
               columns,
               initialValues: { active: true },
             });
-            const res = await axios.post("/swiper", values);
+            const res = await axios.post("/category", values);
 
             if (res) {
               getList();
@@ -147,6 +150,5 @@ const Swiper = () => {
       ></Table>
     </div>
   );
-};
-
-export default Swiper;
+}
+export default Category;

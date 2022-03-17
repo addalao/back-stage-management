@@ -16,6 +16,16 @@ const menuList = [
     icon: <PictureOutlined></PictureOutlined>,
     path: "/swiper",
   },
+  {
+    name: "分类管理",
+    icon: <PictureOutlined></PictureOutlined>,
+    path: "/category",
+  },
+  {
+    name: "商品管理",
+    icon: <PictureOutlined></PictureOutlined>,
+    path: "/commodity",
+  },
 ];
 
 export default menuList;

@@ -7,16 +7,30 @@ import {
   Space,
   Switch,
   Table,
+  Select,
 } from "antd";
 import axios from "axios";
+import { useEffect } from "react";
+import { useState } from "react";
 import { useCallback } from "react";
 import FormModal from "../../components/formModal";
 
 import usePagingList from "../../hooks/usePagingList";
 
-const Swiper = () => {
+function Commodity() {
+  const [cates, setCates] = useState([]);
+  const getCates = async () => {
+    const res = await axios.get("/category", {
+      params: { page: 1, size: 1000 },
+    });
+    setCates(res.data.list);
+  };
+
+  useEffect(() => {
+    getCates();
+  }, []);
   const request = useCallback(async ({ page, size }) => {
-    const res = await axios.get("/swiper", {
+    const res = await axios.get("/goods", {
       params: { page, size },
     });
 
@@ -26,16 +40,55 @@ const Swiper = () => {
 
   const columns = [
     {
-      title: "图片",
-      dataIndex: "url",
+      title: "分类名称",
+      fixed: "left",
+      dataIndex: "name",
       render: (v) => {
-        return <Image src={v} width={100} height={50}></Image>;
+        return <Space>{v}</Space>;
       },
     },
     {
-      title: "跳转地址",
-      dataIndex: "jumpUrl",
+      title: "商品图片",
+      dataIndex: "cover",
+      render: (v) => {
+        return <Image src={v} width={50} height={50}></Image>;
+      },
     },
+    {
+      title: "所属分类",
+      dataIndex: "cates",
+      renderFormItem: () => {
+        return (
+          <Form.Item label="是否上架" name="cates" required>
+            <Select
+              mode="multiple"
+              options={cates.map((v) => {
+                return {
+                  label: v.name,
+                  value: v.id,
+                };
+              })}
+              // style={{ width: "100%" }}
+              // placeholder="select one country"
+              // defaultValue={v.map((itm) => {
+              //   return itm.name;
+              // })}
+              // optionLabelProp="label"
+            >
+              {/* {v.map((itm) => {
+                return (
+                  <Option value={itm.name} label={itm.name}>
+                    <div className="demo-option-label-item">{itm.name}</div>
+                  </Option>
+                );
+              })} */}
+            </Select>
+          </Form.Item>
+        );
+      },
+      render: (v) => v.map((i) => i.name).join("，"),
+    },
+
     {
       title: "是否上架",
       dataIndex: "active",
@@ -60,7 +113,7 @@ const Swiper = () => {
                 data[i].active = value;
                 return [...data];
               });
-              await axios.put("/swiper", {
+              await axios.put("/goods", {
                 ...row,
                 active: value,
               });
@@ -72,6 +125,7 @@ const Swiper = () => {
     },
     {
       title: "操作",
+      fixed: "right",
       render: (_, row) => {
         return (
           <Space size={15}>
@@ -80,9 +134,12 @@ const Swiper = () => {
               onClick={async () => {
                 const values = await FormModal.show({
                   columns,
-                  initialValues: row,
+                  initialValues: {
+                    ...row,
+                    cates: row.cates.map((v) => v.id),
+                  },
                 });
-                const res = await axios.put("/swiper", {
+                const res = await axios.put("/goods", {
                   ...values,
                   id: row.id,
                 });
@@ -99,7 +156,7 @@ const Swiper = () => {
               className="actionItem dangerText"
               title="是否确认删除？"
               onConfirm={async () => {
-                const res = await axios.delete("/swiper", {
+                const res = await axios.delete("/goods", {
                   params: {
                     id: row.id,
                   },
@@ -117,7 +174,6 @@ const Swiper = () => {
       },
     },
   ];
-
   return (
     <div className="Swiper">
       <Space style={{ marginBottom: 16 }}>
@@ -128,7 +184,7 @@ const Swiper = () => {
               columns,
               initialValues: { active: true },
             });
-            const res = await axios.post("/swiper", values);
+            const res = await axios.post("/category", values);
 
             if (res) {
               getList();
@@ -144,9 +200,9 @@ const Swiper = () => {
         columns={columns}
         dataSource={list}
         pagination={{ pageSize: size, total, current: page }}
+        scroll={{ x: 1000, y: 300 }}
       ></Table>
     </div>
   );
-};
-
-export default Swiper;
+}
+export default Commodity;
