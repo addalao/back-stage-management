@@ -35,26 +35,15 @@ const GenaralUpload = (props) => {
       name="file"
       headers={{ Authorization: `Bearer ${token}` }}
       action={`/api/general/upload`}
-      onRemove={(v) => {
-        setFileList((old) => {
-          const i = old.findIndex((f) => f.uid === v.uid);
-          old.splice(i, 1);
-          const list = old.map((f) => f.response);
-          const res = value instanceof Array ? list : v.file.response;
-          onChange && onChange(res);
-          return [...old];
-        });
-      }}
       onPreview={(v) => {
         window.open(v.response);
       }}
       onChange={(v) => {
         setFileList(v.fileList);
-        if (v.file.status === "done") {
-          const list = v.fileList.map((f) => f.response);
-          const res = value instanceof Array ? list : v.file.response;
-          onChange && onChange(res);
-        }
+        const list = v.fileList.map((f) => f.response);
+        const value = v.file.status === "removed" ? "" : v.file.response;
+        const res = value instanceof Array ? list : value;
+        onChange && onChange(res);
       }}
     >
       {children || <PlusOutlined></PlusOutlined>}
