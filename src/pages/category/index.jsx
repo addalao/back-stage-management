@@ -11,7 +11,7 @@ import {
 import axios from "axios";
 import { useCallback } from "react";
 import FormModal from "../../components/formModal";
-
+import GenaralUpload from "../../components/genalUpload";
 import usePagingList from "../../hooks/usePagingList";
 
 function Category() {
@@ -35,7 +35,24 @@ function Category() {
     {
       title: "分类图片",
       dataIndex: "icon",
+      renderFormItem: () => {
+        return (
+          <Form.Item
+            label="分类图片"
+            name="icon"
+            rules={[
+              {
+                required: true,
+                message: "请上传图片",
+              },
+            ]}
+          >
+            <GenaralUpload maxCount={1}></GenaralUpload>
+          </Form.Item>
+        );
+      },
       render: (v) => {
+        console.log(v);
         return <Image src={v} width={50} height={50}></Image>;
       },
     },

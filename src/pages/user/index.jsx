@@ -1,9 +1,19 @@
-import { Button, Image, message, Popconfirm, Space, Table, Modal } from "antd";
+import {
+  Button,
+  Image,
+  message,
+  Popconfirm,
+  Space,
+  Table,
+  Modal,
+  Form,
+} from "antd";
 import axios from "axios";
 import { useCallback } from "react";
 import FormModal from "../../components/formModal";
 import usePagingList from "../../hooks/usePagingList";
 import "./index.css";
+import GenaralUpload from "../../components/genalUpload";
 
 /* ------------------------------------------------------------ */
 const User = () => {
@@ -20,6 +30,22 @@ const User = () => {
     {
       title: "头像",
       dataIndex: "avatar",
+      renderFormItem: () => {
+        return (
+          <Form.Item
+            label="商品轮播图"
+            name="avatar"
+            rules={[
+              {
+                required: true,
+                message: "请上传图片",
+              },
+            ]}
+          >
+            <GenaralUpload maxCount={1}></GenaralUpload>
+          </Form.Item>
+        );
+      },
       render: (v) => {
         return <Image src={v} width={50} height={50}></Image>;
       },

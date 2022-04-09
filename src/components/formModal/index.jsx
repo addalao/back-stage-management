@@ -7,11 +7,14 @@ const FormModal = ({
   onCancel,
   onFinish,
   initialValues,
+  width = 1000,
+  height = 500,
 }) => {
   const [form] = Form.useForm();
   return (
     <Modal
-      width={1000}
+      width={width}
+      bodyStyle={{ height, overflowY: "scroll" }}
       visible={columns.length > 0}
       onCancel={onCancel}
       okText="确认"
@@ -52,7 +55,7 @@ const FormModal = ({
   );
 };
 
-FormModal.show = ({ columns, initialValues, hideColKeys }) => {
+FormModal.show = ({ columns, initialValues, hideColKeys, width, height }) => {
   return new Promise((resolve, reject) => {
     const container = document.createElement("div"); //创建一个div
     document.body.appendChild(container); //添加到body
@@ -64,6 +67,8 @@ FormModal.show = ({ columns, initialValues, hideColKeys }) => {
 
     ReactDOM.render(
       <FormModal
+        height={height}
+        width={width}
         columns={columns}
         initialValues={initialValues}
         hideColKeys={hideColKeys}

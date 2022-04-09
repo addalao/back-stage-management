@@ -52,6 +52,22 @@ function Commodity() {
     {
       title: "商品图片",
       dataIndex: "cover",
+      renderFormItem: () => {
+        return (
+          <Form.Item
+            label="商品图"
+            name="cover"
+            rules={[
+              {
+                required: true,
+                message: "请上传图片",
+              },
+            ]}
+          >
+            <GenaralUpload maxCount={1}></GenaralUpload>
+          </Form.Item>
+        );
+      },
       render: (v) => {
         return <Image src={v} width={50} height={50}></Image>;
       },
@@ -62,7 +78,7 @@ function Commodity() {
       renderFormItem: () => {
         return (
           <Form.Item
-            label="图片"
+            label="商品轮播图"
             name="imgs"
             rules={[
               {
@@ -153,6 +169,8 @@ function Commodity() {
               onClick={async () => {
                 const values = await FormModal.show({
                   columns,
+                  width: 1500,
+                  height: 700,
                   initialValues: {
                     ...row,
                     cates: row.cates.map((v) => v.id),
@@ -200,6 +218,8 @@ function Commodity() {
           type="primary"
           onClick={async () => {
             const values = await FormModal.show({
+              width: 1500,
+              height: 700,
               columns,
               initialValues: { active: true },
             });

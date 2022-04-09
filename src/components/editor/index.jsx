@@ -4,12 +4,11 @@ import WangEditor from "wangeditor";
 let editor = null;
 
 const WEditor = ({ value, onChange }) => {
-
   useEffect(() => {
     editor = new WangEditor("#editor");
     editor.config.onchange = onChange;
     editor.config.styleWithCSS = true;
-    editor.config.height = 200;
+    editor.config.height = 1000;
     editor.config.customUploadImg = async (files, insert) => {
       const formData = new FormData();
       formData.append("file", files[0]);
@@ -23,7 +22,7 @@ const WEditor = ({ value, onChange }) => {
       editor.destroy();
     };
   }, [value, onChange]);
-  
+
   return <div id="editor"></div>;
 };
 
